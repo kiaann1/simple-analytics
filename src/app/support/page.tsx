@@ -13,8 +13,12 @@ return (
     <div className="max-w-4xl mx-auto px-6">
       <div className="flex items-center justify-between">
         <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
-          <img src="/bb-logo.png" alt="KWMT Marketing Logo" className="h-8 w-8 object-contain" />
-          <span className="text-white font-semibold">Analytics Dashboard</span>
+          <img 
+            src="/bb-logo.png" 
+            alt="KWMT Marketing Logo" 
+            className="h-8 w-8 object-contain"
+          />
+          <span className="text-white font-semibold">KWMT Analytics</span>
         </a>
 
       </div>

@@ -12,6 +12,7 @@ export default function Home() {
   const [properties, setProperties] = useState<GoogleAnalyticsProperty[]>([]);
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [demoMode, setDemoMode] = useState(false);
   const fetchAttempted = useRef(false);
   const fetchInProgress = useRef(false);
 
@@ -101,7 +102,7 @@ export default function Home() {
     );
   }
 
-  if (!session) {
+  if (!session && !demoMode) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 flex items-center justify-center">
         <div className="text-center space-y-8 max-w-md mx-auto px-6 animate-fade-in">
@@ -121,7 +122,7 @@ export default function Home() {
             </p>
           </div>
           
-          <button
+          {/* <button
             onClick={() => signIn("google")}
             className="w-full bg-white text-gray-700 px-6 py-3 rounded-md font-medium flex items-center justify-center gap-3 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-sm border border-gray-300 animate-scale-in"
           >
@@ -131,8 +132,25 @@ export default function Home() {
               className="h-5 w-5"
             />
             Sign in with Google
+          </button> */}
+          <button
+            onClick={() => {
+              // Enable demo mode and set mock properties
+              setDemoMode(true);
+              setProperties([
+                { propertyId: '123456789', name: 'KWMT Marketing Website', displayName: 'kwmt.dev', websiteUrl: 'https://kwmt.dev' },
+                { propertyId: '987654321', name: 'KWMT Marketing Blog', displayName: 'blog.kwmt.dev', websiteUrl: 'https://blog.kwmt.dev' },
+                { propertyId: '555666777', name: 'Client Demo Site', displayName: 'demo.kwmt.dev', websiteUrl: 'https://demo.kwmt.dev' }
+              ]);
+              fetchAttempted.current = true;
+            }}
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-3 rounded-md font-medium flex items-center justify-center gap-3 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-200 shadow-lg animate-scale-in"
+          >
+            <LogIn className="h-5 w-5" />
+            View Demo Dashboard
           </button>
-          
+
+
           <div className="text-white/60 text-sm animate-fade-in-delay">
             <p>Requires Google Analytics read permissions</p>
           </div>
@@ -144,7 +162,8 @@ export default function Home() {
   const handlePropertyChange = () => {
     console.log('🔄 Property change - resetting states');
     setSelectedProperty(null);
-    fetchAttempted.current = false; // Reset fetch state to allow refetching if needed
+    setDemoMode(false);
+    fetchAttempted.current = false;
     localStorage.removeItem('selectedProperty');
   };
 
