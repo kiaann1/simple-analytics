@@ -92,7 +92,7 @@ export default function PrivacyPolicy() {
                   </p>
                   <div className="bg-white/5 p-4 rounded-lg border border-white/10">
                     <p><strong>KWMT Marketing</strong></p>
-                    <p>Website: <a href="https://kwmt.dev" className="text-blue-400 hover:text-blue-300">bravemarketing.co.uk</a></p>
+                    <p>Website: <a href="https://kwmt.dev" className="text-blue-400 hover:text-blue-300">kwmt.dev</a></p>
                   </div>
                 </div>
               </section>

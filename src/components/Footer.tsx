@@ -31,12 +31,6 @@ export function Footer() {
           {/* Navigation links */}
           <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-8">
             <Link 
-              href="/about"
-              className="text-white/60 hover:text-white text-sm transition-colors duration-300 hover:underline"
-            >
-              About
-            </Link>
-            <Link 
               href="/privacy"
               className="text-white/60 hover:text-white text-sm transition-colors duration-300 hover:underline"
             >

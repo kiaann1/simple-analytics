@@ -8,6 +8,23 @@ export const metadata: Metadata = {
 export default function Support() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
+      {/* Simple Navigation */}
+      <nav className="border-b border-white/10 py-4">
+        <div className="max-w-4xl mx-auto px-6">
+          <div className="flex items-center justify-between">
+            <a href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+              <img 
+                src="/bb-logo.png" 
+                alt="KWMT Marketing Logo" 
+                className="h-8 w-8 object-contain"
+              />
+              <span className="text-white font-semibold">Analytics Dashboard</span>
+            </a>
+
+          </div>
+        </div>
+      </nav>
+
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 border border-white/10">
           <div className="space-y-6">
@@ -32,7 +49,7 @@ export default function Support() {
 
                   <div className="bg-white/5 p-6 rounded-lg border border-white/10">
                     <h3 className="text-lg font-semibold text-white mb-2">How do I revoke access?</h3>
-                    <p>You can revoke access at any time by going to your Google Account settings > Security > Third-party apps with account access, and removing "KWMT Marketing Analytics Dashboard" from the list.</p>
+                    <p>You can revoke access at any time by going to your Google Account settings &gt; Security &gt; Third-party apps with account access, and removing "KWMT Marketing Analytics Dashboard" from the list.</p>
                   </div>
 
                   <div className="bg-white/5 p-6 rounded-lg border border-white/10">
@@ -55,7 +72,7 @@ export default function Support() {
                       </div>
                       
                       <div className="space-y-2">
-                        <p><strong>Website:</strong> <a href="https://kwmt.dev" className="text-blue-400 hover:text-blue-300 transition-colors">bravemarketing.co.uk</a></p>
+                        <p><strong>Website:</strong> <a href="https://kwmt.dev" className="text-blue-400 hover:text-blue-300 transition-colors">kwmt.dev</a></p>
                         <p><strong>Business Focus:</strong> Digital Marketing, Analytics, SEO, PPC Management</p>
                       </div>
                     </div>

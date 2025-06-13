@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { AnalyticsData } from "@/lib/google-analytics-new";
 import { MetricCard } from "./MetricCard";
@@ -31,18 +31,26 @@ interface AnalyticsDashboardProps {
 }
 
 export function AnalyticsDashboard({ propertyId, onPropertyChange }: AnalyticsDashboardProps) {
-  const { data: session } = useSession();  const [data, setData] = useState<AnalyticsData | null>(null);
+  const { data: session } = useSession();
+  const [data, setData] = useState<AnalyticsData | null>(null);
   const [loading, setLoading] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [dateRange, setDateRange] = useState({
     startDate: format(subDays(new Date(), 30), 'yyyy-MM-dd'),
-    endDate: format(new Date(), 'yyyy-MM-dd')  });
+    endDate: format(new Date(), 'yyyy-MM-dd')
+  });
 
   const fetchAnalyticsData = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/analytics/data?propertyId=${propertyId}&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`
+        `/api/analytics/data?propertyId=${propertyId}&startDate=${dateRange.startDate}&endDate=${dateRange.endDate}`,
+        { 
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
       );
       if (response.ok) {
         const analyticsData = await response.json();
@@ -59,10 +67,62 @@ export function AnalyticsDashboard({ propertyId, onPropertyChange }: AnalyticsDa
     fetchAnalyticsData();
   }, [fetchAnalyticsData]);
 
-  const calculatePercentageChange = (current: number, previous: number) => {
-    if (previous === 0) return current > 0 ? 100 : 0;
-    return ((current - previous) / previous) * 100;
-  };
+  // Memoize the percentage calculation to avoid recalculation
+  const calculatePercentageChange = useMemo(() => 
+    (current: number, previous: number) => {
+      if (previous === 0) return current > 0 ? 100 : 0;
+      return ((current - previous) / previous) * 100;
+    }, []
+  );
+
+  // Memoize metric cards to prevent unnecessary re-renders
+  const metricCards = useMemo(() => {
+    if (!data) return null;
+    
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="animate-scale-in">
+          <MetricCard
+            title="Total Users"
+            value={data.totalUsers.toLocaleString()}
+            change={calculatePercentageChange(data.totalUsers, data.previousPeriodData.totalUsers)}
+            icon={Users}
+            gradient="from-blue-500 to-blue-600"
+          />
+        </div>
+        
+        <div className="animate-scale-in">
+          <MetricCard
+            title="Sessions"
+            value={data.sessions.toLocaleString()}
+            change={calculatePercentageChange(data.sessions, data.previousPeriodData.sessions)}
+            icon={MousePointer}
+            gradient="from-purple-500 to-purple-600"
+          />
+        </div>
+        
+        <div className="animate-scale-in">
+          <MetricCard
+            title="Pageviews"
+            value={data.pageviews.toLocaleString()}
+            change={calculatePercentageChange(data.pageviews, data.previousPeriodData.pageviews)}
+            icon={Eye}
+            gradient="from-green-500 to-green-600"
+          />
+        </div>
+        
+        <div className="animate-scale-in">
+          <MetricCard
+            title="Engagement Rate"
+            value={`${(data.engagementRate * 100).toFixed(1)}%`}
+            icon={UserCheck}
+            gradient="from-cyan-500 to-cyan-600"
+          />
+        </div>
+      </div>
+    );
+  }, [data, calculatePercentageChange]);
+
   if (loading && !data) {
     return (      <div className="flex-1 flex items-center justify-center">
         <div className="text-center space-y-6 animate-fade-in">
@@ -80,7 +140,7 @@ export function AnalyticsDashboard({ propertyId, onPropertyChange }: AnalyticsDa
       </div>
     );}
   return (
-    <div className="flex-1 bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950 page-transition">
+    <div className="flex-1 bg-gradient-to-br from-slate-950 via-gray-900 to-slate-950">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-white/10 bg-black/40 backdrop-blur-md animate-slide-in-left">
         <div className="max-w-7xl mx-auto px-6 py-4">
@@ -204,81 +264,13 @@ export function AnalyticsDashboard({ propertyId, onPropertyChange }: AnalyticsDa
             </div>
           )}
         </div>
-      </header>      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8 animate-fade-in-up">
+      </header>      <main className="max-w-7xl mx-auto px-6 py-8 space-y-8">
         {data && (
           <>
             {/* Section 1: Website Overview */}
             <section className="space-y-6 animate-slide-up">
               <h2 className="text-2xl font-bold text-white">Website Overview</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Total Users"
-                    value={data.totalUsers.toLocaleString()}
-                    change={calculatePercentageChange(data.totalUsers, data.previousPeriodData.totalUsers)}
-                    icon={Users}
-                    gradient="from-blue-500 to-blue-600"
-                  />
-                </div>
-                
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Sessions"
-                    value={data.sessions.toLocaleString()}
-                    change={calculatePercentageChange(data.sessions, data.previousPeriodData.sessions)}
-                    icon={MousePointer}
-                    gradient="from-purple-500 to-purple-600"
-                  />
-                </div>
-                
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Pageviews"
-                    value={data.pageviews.toLocaleString()}
-                    change={calculatePercentageChange(data.pageviews, data.previousPeriodData.pageviews)}
-                    icon={Eye}
-                    gradient="from-green-500 to-green-600"
-                  />
-                </div>
-                
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Engagement Rate"
-                    value={`${(data.engagementRate * 100).toFixed(1)}%`}
-                    icon={UserCheck}
-                    gradient="from-cyan-500 to-cyan-600"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Avg. Engagement Time"
-                    value={`${Math.round(data.avgEngagementTime)}s`}
-                    icon={Clock}
-                    gradient="from-orange-500 to-orange-600"
-                  />
-                </div>
-                
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="New Users"
-                    value={data.newUsers.toLocaleString()}
-                    icon={UserCheck}
-                    gradient="from-pink-500 to-pink-600"
-                  />
-                </div>
-                
-                <div className="animate-scale-in">
-                  <MetricCard
-                    title="Returning Users"
-                    value={data.returningUsers.toLocaleString()}
-                    icon={RefreshCw}
-                    gradient="from-indigo-500 to-indigo-600"
-                  />
-                </div>
-              </div>
+                {metricCards}
             </section>            {/* Section 2: Traffic Source Overview */}
             <section className="space-y-6 animate-fade-in-up">
               <h2 className="text-2xl font-bold text-white">Traffic Sources</h2>
