@@ -83,8 +83,8 @@ export async function GET(request: NextRequest) {
     ]
   };
 
-  // Reduce API delay significantly
-  await new Promise(resolve => setTimeout(resolve, 200));
+  // Reduce API delay from 200ms to 100ms
+  await new Promise(resolve => setTimeout(resolve, 100));
 
   return NextResponse.json(mockAnalyticsData);
 }
