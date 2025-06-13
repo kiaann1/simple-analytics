@@ -1,8 +1,6 @@
-# Brave Bear Marketing Analytics Dashboard
+# Marketing Analytics Dashboard
 
 A simplified Google Analytics dashboard built with Next.js, designed to make website analytics more accessible and easier to understand for businesses of all sizes.
-
-![Brave Bear Marketing Logo](./public/bb-logo.png)
 
 ## 🚀 Features
 
@@ -43,5 +41,3 @@ This application is prepared for Google OAuth brand verification with:
 - Recharts
 
 ---
-
-**Created by Luke Walker at Brave Bear Marketing**
