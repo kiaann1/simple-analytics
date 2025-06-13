@@ -138,7 +138,7 @@ export default function Home() {
               // Enable demo mode and set mock properties
               setDemoMode(true);
               setProperties([
-                { propertyId: '987654321', name: 'KWMT Marketing Blog', displayName: 'blog.kwmt.dev', websiteUrl: 'https://blog.kwmt.dev' },
+                { propertyId: '987633231', displayName: 'blog.kwmt.dev', websiteUrl: 'https://blog.kwmt.dev' },
                 { propertyId: '123456789', displayName: 'kwmt.dev', websiteUrl: 'https://kwmt.dev' },
                 { propertyId: '987654321', displayName: 'blog.kwmt.dev', websiteUrl: 'https://blog.kwmt.dev' },
                 { propertyId: '555666777', displayName: 'demo.kwmt.dev', websiteUrl: 'https://demo.kwmt.dev' }
